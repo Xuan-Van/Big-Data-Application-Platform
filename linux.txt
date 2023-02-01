@@ -1,0 +1,124 @@
+Ctrl+Alt+F1 打开终端
+sudo 权限
+sudo poweroff 关机
+sudo service lightdm stop 关闭可视化
+sudo apt-get install 下载
+sudo apt-get install update 更新
+sudo apt-get install openssh-server 安装远程登录系统
+sudo apt-get install build-esssential 安装
+sudo ps -aux 查看所有进程(-au)
+
+ctrl+C 退出进程
+Tab 自动补全
+pwd 当前目录地址
+cd 进入目录
+clear 清除屏幕
+ls 查看当前目录下的东西
+ll(ll -al) list all
+~ 主目录（一般为用户名）
+./ 当前目录
+../ 上一级目录
+/ 根目录
+# 注释 
+ifconfig 查看ip地址
+df -h 查看硬盘存储
+bc 计算器
+ect 配置文件所在目录
+python 进入python
+exit() 退出python
+————————————————————————————
+配置环境变量：source mybash.sh
+127.0.0.1 自己电脑的ip地址
+d:当前目录
+r:可读
+w:可写
+x:可执行
+chmod -rw tmp :解除读写权限
+chmod 777 tmp:开启可读可写可执行限
+白色-文件 蓝色-文件夹 绿色-可执行文件夹
+
+>：覆盖 重定位
+>文件 定位到该文件
+>>：追加
+| 前面的输出作为后面的输入
+&：后台运行
+fg:后台调到前台
+b开头：快文件
+$ 替换变量 
+————————————————————————————
+mkdir 新建文件夹
+touch 新建文件
+rmdir 删除空文件夹
+rm 删除文件
+rm -r 删除非空文件夹
+cp 复制：cp 文件 新文件
+mv 剪切：mv 文件 文件夹(文件名则为重命名）
+tar czvf 文件名 文件夹 压缩test文件夹(解压是xzvf)
+jar xvf 解压jar压缩包
+unrar e 文件名 解压rar文件
+cat+文件 显示从头到尾
+tac+文件 从尾行到头行显示
+wc 统计字符数
+sort 排序
+————————————————————————————
+nano 编辑器
+ctrl+O 保存
+ctrl+X 退出
+ctrl+U 撤销
+ctrl+K 删除
+————————————————————————————
+echo "文字" 打印文字
+echo $变量名 输出变量
+echo $? 程序最后退出状态（0：正常，127：异常）
+echo 句子 | python hello.py 作为程序的输入
+#map程序 输入排序
+#reduce程序 统计每个输入个数
+————————————————————————————
+python hello.py  运行py程序
+gcc hello.c -o hello 编译c
+./hello 运行exe
+javac test.java 编译java
+java test 运行java
+————————————————————————————
+ssh 127.0.0.1 ：登录自己的服务器
+hdfs namenode -format ：首次启动格式化
+$HADOOP_HOME/sbin/start-all.sh ：启动hadoop
+netstat -tupln ：显示端口使用情况
+hadoop fs ：HDFS命令
+hadoop fs -mkdir / ：创建HDFS目录
+hadoop fs -copyFromLocal /home/xuan/mybash /test/ ：复制本地文件
+hadoop fs -put /home/xuan/bigdata/u.item /bigdata 本地文件放到hadoop中
+hadoop fs -ls -R / ：查看所有子目录
+————————————————————————————
+quit() 退出pyspark
+rdd=sc.parallelize(list) 列表转化为rdd
+rdd.collect() rdd变回原形式
+匿名函数lambda x:x+3 输入x，返回x+3
+rdd.map(函数) rdd的每一个元素执行函数
+a.split() 句子分离成列表
+
+count=sc.parallelize(a.split()).map(lambda x:(x,1)).reduceByKey(lambda x,y:x+y).collect() 统计字数
+filter(lambda x:x>5) 过滤x<=5的值
+rdd1=sc.parallelize(b).map(lambda x:x[0].upper()+x[1:]).collect() 首字母大写
+rdd1=sc.parallelize(a).filter(lambda x:x>=5 and x<=10).collect() 保留5<=x<=10的值
+
+take(n):截取n组数据
+data=sc.textFile("文件地址") 读取文件
+data1=data.map(lambda x:x.split('\t')[0:3])
+电影平均分
+data2=data1.map(lambda x:(x[1],x[2]))
+data3=data2.map(lambda x:(x[0],(int(x[1]),1)))
+data4=data3.reduceByKey(lambda x,y:(x[0]+y[0],x[1]+y[1]))
+data5=data4.map(lambda x:(x[0],float(x[1][0])/x[1][1]))
+每个人打电影的平均分
+人 电影 打分
+data2=data1.map(lambda x:(x[0],x[2]))
+
+spark-submit --driver-memory=1g --master local[4] 文件 4线程运行文件
+
+data=sc.textFile("file:/home/xuan/bigdata/data.csv")
+header=data.first()
+rawdata=data.filter(lambda x:x!=header)
+rd=rawdata.map(lambda x:x.split(','))
+#rd=rawdata.map(lambda x:x.split(',')[1:]) 删除第一列
+cm=rd.map(lambda x:x[4]).distinct().zipWithIndex().collectAsMap()
